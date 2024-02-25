@@ -1,7 +1,7 @@
 export default function Home() {
   return (
-    <main>
-      <p>Hello World!</p>
-    </main>
+    <div className="flex h-[calc(100vh-4rem)] justify-center bg-neutral-100">
+      <p>Hello world</p>
+    </div>
   );
 }
