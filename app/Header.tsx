@@ -24,13 +24,13 @@ const navLinks: navLinks = [
     href: "/pomodoro",
   },
 ];
-const activeLinkStyle = `border-2 border-dashed border-primary-dark`;
+const activeLinkStyle = `border-2 border-dashed border-neutral-600`;
 
 const Header = () => {
   const pathname = usePathname();
 
   return (
-    <header className="h-16 border-b border-primary-dark bg-white text-primary-dark">
+    <header className="h-16 border-b border-neutral-600 bg-white text-neutral-600">
       <div className="container flex h-full items-center justify-between">
         <Link
           href={"/"}
