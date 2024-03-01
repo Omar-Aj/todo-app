@@ -30,22 +30,22 @@ const Header = () => {
   const pathname = usePathname();
 
   return (
-    <header className="h-16 border-b border-neutral-600 bg-white text-neutral-600">
-      <div className="container flex h-full items-center justify-between">
+    <header className="border-b border-neutral-600 bg-white text-neutral-600 md:h-16">
+      <div className="container flex h-full flex-col items-center justify-between space-y-2 py-2 md:flex-row md:space-y-0">
         <Link
           href={"/"}
-          className={`${shadowsIntoLightTwo.className} select-none text-4xl font-semibold`}
+          className={`${shadowsIntoLightTwo.className} select-none text-2xl font-semibold md:text-4xl`}
         >
           {websiteTitle}
         </Link>
         <nav>
-          <ul className="flex justify-end space-x-8">
+          <ul className="flex justify-end space-x-4">
             {navLinks.map((navLink) => (
               <li
                 key={navLink.href}
-                className={`flex h-8 select-none items-center justify-center overflow-hidden rounded-lg bg-neutral-200 text-lg font-semibold ${pathname === navLink.href ? activeLinkStyle : ""}`}
+                className={`flex select-none items-center justify-center rounded-lg bg-neutral-200 font-semibold md:text-lg ${pathname === navLink.href ? activeLinkStyle : ""}`}
               >
-                <Link className="px-8" href={navLink.href}>
+                <Link className="px-4 md:px-8" href={navLink.href}>
                   {navLink.label}
                 </Link>
               </li>

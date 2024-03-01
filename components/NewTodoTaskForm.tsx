@@ -79,13 +79,16 @@ const NewTodoTaskForm = () => {
   };
 
   return (
-    <div className="flex space-x-2">
-      <Input onChange={(e) => setTaskName(e.target.value)} />
+    <div className="flex flex-wrap gap-2 md:flex-nowrap">
+      <Input
+        placeholder="Task name..."
+        onChange={(e) => setTaskName(e.target.value)}
+      />
       <Select
         value={currentCategory}
         onValueChange={(value) => setCurrentCategory(value)}
       >
-        <SelectTrigger className="w-48 shrink-0 cursor-default">
+        <SelectTrigger className="w-32 shrink-0 flex-grow cursor-default md:w-48">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
