@@ -24,13 +24,13 @@ const navLinks: navLinks = [
     href: "/pomodoro",
   },
 ];
-const activeLinkStyle = `border-2 border-dashed border-neutral-600`;
+const activeLinkStyle = `ring-2 ring-ring ring-offset-2 bg-white`;
 
 const Header = () => {
   const pathname = usePathname();
 
   return (
-    <header className="border-b border-neutral-600 bg-white text-neutral-600 md:h-16">
+    <header className="border-b-2 border-neutral-600 bg-white text-neutral-600 md:h-16">
       <div className="container flex h-full flex-col items-center justify-between space-y-2 py-2 md:flex-row md:space-y-0">
         <Link
           href={"/"}
@@ -43,7 +43,7 @@ const Header = () => {
             {navLinks.map((navLink) => (
               <li
                 key={navLink.href}
-                className={`flex select-none items-center justify-center rounded-lg bg-neutral-200 font-semibold md:text-lg ${pathname === navLink.href ? activeLinkStyle : ""}`}
+                className={`flex select-none items-center justify-center rounded-lg bg-neutral-100 font-semibold md:text-lg ${pathname === navLink.href ? activeLinkStyle : ""}`}
               >
                 <Link className="px-4 md:px-8" href={navLink.href}>
                   {navLink.label}

@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${notoSans.className} flex h-screen flex-col`}>
+      <body className={`${notoSans.className} flex h-dvh flex-col`}>
         <Header />
         <main className="flex-grow">{children}</main>
         <Toaster />

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -11,37 +11,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { FaPlus } from "react-icons/fa6";
+import TodoTaskType from "@/types/TodoTaskType";
 
-type TodoTask = {
-  id: number;
-  name: string;
-  category: string;
-  createdAt: number;
-  isDone: boolean;
-  isDeleted: boolean;
-  deletedAt: number | null;
+type Props = {
+  todoTasksSetter: (newTask: TodoTaskType) => void;
 };
 
 const categories = [
   {
     label: "Important & Urgent",
-    value: "Important_Urgent",
+    value: "important_urgent",
   },
   {
     label: "Important & Non-Urgent",
-    value: "Important_NonUrgent",
+    value: "important_non_urgent",
   },
   {
     label: "Unimportant & Urgent",
-    value: "Unimportant_Urgent",
+    value: "unimportant_urgent",
   },
   {
     label: "Unimportant & Non-Urgent",
-    value: "Unimportant_NonUrgent",
+    value: "unimportant_non_urgent",
   },
 ];
 
-const NewTodoTaskForm = () => {
+const validateTaskAddition = (taskName: string, currentCategory: string) => {
+  if (taskName.trim() === "") {
+    return [false, "The task name cannot be empty."];
+  }
+  if (currentCategory.length === 0) {
+    return [false, "A category is required for the task."];
+  }
+
+  return [true, ""];
+};
+
+const NewTodoTaskForm: FC<Props> = ({ todoTasksSetter }) => {
   const [currentCategory, setCurrentCategory] = useState<string>("");
   const [taskName, setTaskName] = useState<string>("");
   const { toast } = useToast();
@@ -49,24 +55,25 @@ const NewTodoTaskForm = () => {
   const addTaskHandler = (event: React.MouseEvent) => {
     event.preventDefault();
 
-    if (taskName.trim() === "") {
-      toast({
-        description: "The task name cannot be empty.",
+    const [isTaskValid, errorMsg] = validateTaskAddition(
+      taskName,
+      currentCategory,
+    );
+    if (!isTaskValid) {
+      return toast({
+        description: errorMsg,
       });
-      return;
     }
 
-    if (currentCategory.length === 0) {
-      toast({
-        description: "A category is required for the task.",
-      });
-      return;
-    }
-
-    const allTasksJson = localStorage.getItem("todoAppTasks");
-    const allTasks: TodoTask[] = allTasksJson ? JSON.parse(allTasksJson) : [];
-    const newTask: TodoTask = {
-      id: allTasks.length ? allTasks[allTasks.length - 1].id + 1 : 1,
+    const allTodoTasksJson = localStorage.getItem("todoAppTasks");
+    const allTodoTasks: TodoTaskType[] = allTodoTasksJson
+      ? JSON.parse(allTodoTasksJson)
+      : [];
+    const newTask: TodoTaskType = {
+      id:
+        allTodoTasks.length > 0
+          ? allTodoTasks[allTodoTasks.length - 1].id + 1
+          : 1,
       name: taskName,
       category: currentCategory,
       createdAt: Date.now(),
@@ -74,8 +81,15 @@ const NewTodoTaskForm = () => {
       isDeleted: false,
       deletedAt: null,
     };
-    allTasks.push(newTask);
-    localStorage.setItem("todoAppTasks", JSON.stringify(allTasks));
+    allTodoTasks.push(newTask);
+    localStorage.setItem("todoAppTasks", JSON.stringify(allTodoTasks));
+
+    todoTasksSetter(newTask);
+
+    toast({
+      description: "Task Added.",
+      variant: "acceptance",
+    });
   };
 
   return (
