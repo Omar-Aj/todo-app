@@ -2,22 +2,22 @@ import { FC, useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import Category from "./Category";
 import SingleTodoTask from "./SingleTodoTask";
-import TodoTaskType from "@/types/TodoTaskType";
 import EmptyTodoTasks from "./EmptyTodoTasks";
+import TaskType from "@/types/TaskType";
 
 type Props = {
-  todoTasks: TodoTaskType[];
-  todoTasksSetter: (newTask: TodoTaskType) => void;
+  todoTasks: TaskType[];
+  deleteTodoTask: (taskToDelete: TaskType) => void;
 };
 
 type CategoryGroup = {
   value: string;
   name: string;
   tip: string;
-  tasks: TodoTaskType[];
+  tasks: TaskType[];
 };
 
-const categoryOrder = [
+const categoriesOrder = [
   "important_urgent",
   "important_non_urgent",
   "unimportant_urgent",
@@ -39,18 +39,18 @@ const getCategoryNameTip = (categoryValue: string): string[] => {
   }
 };
 
-const groupTasksByCategory = (tasks: TodoTaskType[]) => {
-  const todoTasksByCategory: CategoryGroup[] = [];
+const groupTodoTasksByCategory = (tasks: TaskType[]) => {
+  const tasksByCategory: CategoryGroup[] = [];
 
   tasks.forEach((task) => {
-    const existingCategory = todoTasksByCategory.find(
+    const existingCategory = tasksByCategory.find(
       (group) => group.value === task.category,
     );
     if (existingCategory) {
       existingCategory?.tasks.push(task);
     } else {
       const [categoryName, categoryTip] = getCategoryNameTip(task.category);
-      todoTasksByCategory.push({
+      tasksByCategory.push({
         value: task.category,
         name: categoryName,
         tip: categoryTip,
@@ -59,10 +59,10 @@ const groupTasksByCategory = (tasks: TodoTaskType[]) => {
     }
   });
 
-  return todoTasksByCategory;
+  return tasksByCategory;
 };
 
-const TodoTasksList: FC<Props> = ({ todoTasks, todoTasksSetter }) => {
+const TodoTasksList: FC<Props> = ({ todoTasks, deleteTodoTask }) => {
   const [groupedTodoTasks, setGroupedTodoTasks] = useState<
     CategoryGroup[] | null
   >(null);
@@ -70,9 +70,10 @@ const TodoTasksList: FC<Props> = ({ todoTasks, todoTasksSetter }) => {
   useEffect(() => {
     todoTasks.sort(
       (a, b) =>
-        categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category),
+        categoriesOrder.indexOf(a.category) -
+        categoriesOrder.indexOf(b.category),
     );
-    const todoTasksByCategory = groupTasksByCategory(todoTasks);
+    const todoTasksByCategory = groupTodoTasksByCategory(todoTasks);
     setGroupedTodoTasks(todoTasksByCategory);
   }, [todoTasks]);
 
@@ -84,14 +85,14 @@ const TodoTasksList: FC<Props> = ({ todoTasks, todoTasksSetter }) => {
     );
   return (
     <div className="flex flex-col space-y-4 overflow-y-auto">
-      {groupedTodoTasks?.map(({ value, name, tip, tasks }, index) => (
+      {groupedTodoTasks?.map(({ value, name, tip, tasks: todos }, index) => (
         <div className="space-y-4" key={value}>
           <Category name={name} tip={tip} />
-          {tasks.map((task) => (
+          {todos.map((task) => (
             <SingleTodoTask
               key={task.id}
               todoTask={task}
-              todoTasksSetter={todoTasksSetter}
+              deleteTodoTask={deleteTodoTask}
             />
           ))}
           {index != groupedTodoTasks.length - 1 && <Separator />}

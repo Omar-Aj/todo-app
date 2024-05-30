@@ -1,4 +1,4 @@
-type TodoTaskType = {
+type TaskType = {
   id: number;
   name: string;
   category: string;
@@ -8,4 +8,4 @@ type TodoTaskType = {
   deletedAt: number | null;
 };
 
-export default TodoTaskType;
+export default TaskType;
