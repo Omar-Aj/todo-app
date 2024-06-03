@@ -10,7 +10,6 @@ const EmptyTodoTasks = () => {
         src={all_done}
         alt="All Tasks Done"
         width={512}
-        height={512}
         priority={true}
         className="shrink-0"
       />
