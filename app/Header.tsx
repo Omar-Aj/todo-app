@@ -30,7 +30,7 @@ const Header = () => {
   const pathname = usePathname();
 
   return (
-    <header className="border-b-2 border-neutral-600 bg-white text-neutral-600 md:h-16">
+    <header className="flex-shrink-0 border-b-2 border-neutral-600 bg-white text-neutral-600 md:h-16">
       <div className="container flex h-full flex-col items-center justify-between space-y-2 py-2 md:flex-row md:space-y-0">
         <Link
           href={"/"}

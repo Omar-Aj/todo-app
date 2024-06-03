@@ -1,5 +1,4 @@
-import { FC, useEffect, useState } from "react";
-import { Separator } from "@/components/ui/separator";
+import { FC } from "react";
 import Category from "./Category";
 import SingleTodoTask from "./SingleTodoTask";
 import EmptyTodoTasks from "./EmptyTodoTasks";
@@ -8,6 +7,7 @@ import TaskType from "@/types/TaskType";
 type Props = {
   todoTasks: TaskType[];
   deleteTodoTask: (taskToDelete: TaskType) => void;
+  markTodoTaskCompleted: (taskToDelete: TaskType) => void;
 };
 
 type CategoryGroup = {
@@ -17,65 +17,56 @@ type CategoryGroup = {
   tasks: TaskType[];
 };
 
-const categoriesOrder = [
-  "important_urgent",
-  "important_non_urgent",
-  "unimportant_urgent",
-  "unimportant_non_urgent",
-];
-
-const getCategoryNameTip = (categoryValue: string): string[] => {
-  switch (categoryValue) {
-    case "important_urgent":
-      return ["Important & Urgent", "Do First"];
-    case "important_non_urgent":
-      return ["Important & Non-Urgent", "Do Later"];
-    case "unimportant_urgent":
-      return ["Unimportant & Urgent", "Try to Delegate It"];
-    case "unimportant_non_urgent":
-      return ["Unimportant & Non-Urgent", "Don't Do or Do when You're Free"];
-    default:
-      return ["", ""];
-  }
-};
-
 const groupTodoTasksByCategory = (tasks: TaskType[]) => {
-  const tasksByCategory: CategoryGroup[] = [];
+  const categoryGroups: CategoryGroup[] = [
+    {
+      value: "important_urgent",
+      name: "Important & Urgent",
+      tip: "Do First",
+      tasks: [],
+    },
+    {
+      value: "important_non_urgent",
+      name: "Important & Non-Urgent",
+      tip: "Do Later",
+      tasks: [],
+    },
+    {
+      value: "unimportant_urgent",
+      name: "Unimportant & Urgent",
+      tip: "Try to Delegate It",
+      tasks: [],
+    },
+    {
+      value: "unimportant_non_urgent",
+      name: "Unimportant & Non-Urgent",
+      tip: "Don't Do or Do when You're Free",
+      tasks: [],
+    },
+  ];
 
   tasks.forEach((task) => {
-    const existingCategory = tasksByCategory.find(
-      (group) => group.value === task.category,
-    );
-    if (existingCategory) {
-      existingCategory?.tasks.push(task);
+    const taskCategory = task.category;
+    if (taskCategory == "important_urgent") {
+      categoryGroups[0].tasks.push(task);
+    } else if (taskCategory == "important_non_urgent") {
+      categoryGroups[1].tasks.push(task);
+    } else if (taskCategory == "unimportant_urgent") {
+      categoryGroups[2].tasks.push(task);
     } else {
-      const [categoryName, categoryTip] = getCategoryNameTip(task.category);
-      tasksByCategory.push({
-        value: task.category,
-        name: categoryName,
-        tip: categoryTip,
-        tasks: [task],
-      });
+      categoryGroups[3].tasks.push(task);
     }
   });
 
-  return tasksByCategory;
+  return categoryGroups;
 };
 
-const TodoTasksList: FC<Props> = ({ todoTasks, deleteTodoTask }) => {
-  const [groupedTodoTasks, setGroupedTodoTasks] = useState<
-    CategoryGroup[] | null
-  >(null);
-
-  useEffect(() => {
-    todoTasks.sort(
-      (a, b) =>
-        categoriesOrder.indexOf(a.category) -
-        categoriesOrder.indexOf(b.category),
-    );
-    const todoTasksByCategory = groupTodoTasksByCategory(todoTasks);
-    setGroupedTodoTasks(todoTasksByCategory);
-  }, [todoTasks]);
+const TodoTasksList: FC<Props> = ({
+  todoTasks,
+  deleteTodoTask,
+  markTodoTaskCompleted,
+}) => {
+  const groupedTodoTasks = groupTodoTasksByCategory(todoTasks);
 
   if (todoTasks.length == 0)
     return (
@@ -84,20 +75,26 @@ const TodoTasksList: FC<Props> = ({ todoTasks, deleteTodoTask }) => {
       </div>
     );
   return (
-    <div className="flex flex-col space-y-4 overflow-y-auto">
-      {groupedTodoTasks?.map(({ value, name, tip, tasks: todos }, index) => (
-        <div className="space-y-4" key={value}>
-          <Category name={name} tip={tip} />
-          {todos.map((task) => (
-            <SingleTodoTask
-              key={task.id}
-              todoTask={task}
-              deleteTodoTask={deleteTodoTask}
-            />
-          ))}
-          {index != groupedTodoTasks.length - 1 && <Separator />}
-        </div>
-      ))}
+    <div className="flex flex-col space-y-2">
+      {groupedTodoTasks.map(({ value, name, tip, tasks }) => {
+        if (tasks.length > 0)
+          return (
+            <div
+              className="space-y-4 rounded-md border bg-white p-4 md:px-8 md:py-8"
+              key={value}
+            >
+              <Category name={name} tip={tip} />
+              {tasks.map((task) => (
+                <SingleTodoTask
+                  key={task.id}
+                  todoTask={task}
+                  deleteTodoTask={deleteTodoTask}
+                  markTodoTaskCompleted={markTodoTaskCompleted}
+                />
+              ))}
+            </div>
+          );
+      })}
     </div>
   );
 };

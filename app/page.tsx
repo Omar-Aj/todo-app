@@ -4,11 +4,14 @@ import NewTodoTaskForm from "@/components/NewTodoTaskForm";
 import TodoTasksList from "@/components/TodoTasksList";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import TaskType from "@/types/TaskType";
+import CompletedTasksList from "@/components/CompletedTasksList";
 
 export default function Home() {
   const [todoTasks, setTodoTasks] = useState<TaskType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
+  const [todoTasksTabSelected, setTodoTasksTabSelected] =
+    useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const addTodoTask = (taskName: string, category: string) => {
     const newTask: TaskType = {
@@ -23,9 +26,11 @@ export default function Home() {
 
     setTodoTasks((prevState) => {
       const newTodoTasks = [...prevState, newTask];
-      localStorage.setItem("todoAppTasks", JSON.stringify(newTodoTasks));
+      const sortedTasks = newTodoTasks.toSorted((a, b) => a.id - b.id);
 
-      return newTodoTasks;
+      localStorage.setItem("todoAppTasks", JSON.stringify(sortedTasks));
+
+      return sortedTasks;
     });
   };
 
@@ -40,34 +45,75 @@ export default function Home() {
     });
   };
 
+  const markTodoTaskCompleted = (completedTask: TaskType) => {};
+
+  const handleTabChange = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+
+    const buttonType = event.currentTarget.innerText.toLowerCase();
+    setTodoTasksTabSelected((prevState) => {
+      if (buttonType === "todo") return true;
+      return false;
+    });
+  };
+
   useEffect(() => {
     const allTodoTasksJson = localStorage.getItem("todoAppTasks");
     const allTodoTasks: TaskType[] = allTodoTasksJson
       ? JSON.parse(allTodoTasksJson)
       : [];
-    setTodoTasks(allTodoTasks);
+    const allTodoTasksSorted = allTodoTasks.toSorted((a, b) => a.id - b.id);
+    const allCompletedTasks = allTodoTasksSorted.filter(
+      (task) => task.isDone === true,
+    );
+
+    setTodoTasks(allTodoTasksSorted);
+    setCompletedTasks(allCompletedTasks);
     setIsLoading(false);
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
   return (
-    <div className="h-full bg-neutral-100">
-      <div className="container flex h-full max-w-3xl flex-col">
-        {isLoading ? (
-          <div className="flex flex-grow items-center justify-center">
-            <LoadingSpinner />
-          </div>
-        ) : (
-          <div className="flex-grow pt-4">
+    <div className="container flex h-full max-w-3xl flex-col">
+      <div className="flex gap-4 py-2">
+        <button
+          onClick={handleTabChange}
+          className="flex-grow rounded bg-blue-300 py-2"
+        >
+          Todo
+        </button>
+        <button
+          onClick={handleTabChange}
+          className="flex-grow rounded bg-blue-300 py-2"
+        >
+          Completed
+        </button>
+      </div>
+
+      {todoTasksTabSelected ? (
+        <div className="flex flex-grow flex-col">
+          <div className="flex-grow">
             <TodoTasksList
               todoTasks={todoTasks}
               deleteTodoTask={deleteTodoTask}
+              markTodoTaskCompleted={markTodoTaskCompleted}
             />
           </div>
-        )}
-        <div className="sticky bottom-0 bg-neutral-100 py-4">
-          <NewTodoTaskForm addTodoTask={addTodoTask} />
+          <div className="sticky bottom-0 mt-4 bg-neutral-100 py-2">
+            <NewTodoTaskForm addTodoTask={addTodoTask} />
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="flex-grow">
+          <CompletedTasksList completedTasks={completedTasks} />
+        </div>
+      )}
     </div>
   );
 }

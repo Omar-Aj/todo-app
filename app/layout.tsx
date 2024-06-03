@@ -20,7 +20,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${notoSans.className} flex h-dvh flex-col`}>
         <Header />
-        <main className="flex-grow">{children}</main>
+        <main className="flex-grow overflow-auto bg-neutral-100">
+          {children}
+        </main>
         <Toaster />
       </body>
     </html>
