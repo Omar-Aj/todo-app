@@ -1,6 +1,6 @@
 import { FC } from "react";
 import TaskType from "@/types/TaskType";
-import CategoryType from "@/types/CategoryType";
+import CategoryEnum from "@/types/CategoryEnum";
 import { FaCheck } from "react-icons/fa6";
 import { FaTrashCan } from "react-icons/fa6";
 
@@ -11,10 +11,10 @@ type Props = {
 };
 
 const categoryStyle = {
-  important_urgent: "border-red-300 bg-red-200",
-  important_non_urgent: "border-orange-300 bg-orange-200",
-  unimportant_urgent: "border-blue-300 bg-blue-200",
-  unimportant_non_urgent: "border-neutral-300 bg-neutral-200",
+  "ImportantUrgent": "border-red-300 bg-red-200",
+  "ImportantNonUrgent": "border-orange-300 bg-orange-200",
+  "UnimportantUrgent": "border-blue-300 bg-blue-200",
+  "UnimportantNonUrgent": "border-neutral-300 bg-neutral-200",
 };
 
 const SingleTodoTask: FC<Props> = ({
@@ -24,7 +24,7 @@ const SingleTodoTask: FC<Props> = ({
 }) => {
   return (
     <div
-      className={`flex space-x-4 rounded-lg border-4 border-dashed p-4 text-neutral-600 shadow-lg ${categoryStyle[todoTask.category as CategoryType]}`}
+      className={`flex space-x-4 rounded-lg border-4 border-dashed p-4 text-neutral-600 shadow-lg ${categoryStyle[todoTask.category]}`}
     >
       <button
         onClick={() => markTodoTaskCompleted(todoTask)}

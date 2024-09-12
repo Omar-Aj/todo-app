@@ -11,30 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { FaPlus } from "react-icons/fa6";
-import TaskType from "@/types/TaskType";
+import CategoryEnum from "@/types/CategoryEnum";
 
 type Props = {
   addTodoTask: (taskName: string, category: string) => void;
 };
-
-const categories = [
-  {
-    label: "Important & Urgent",
-    value: "important_urgent",
-  },
-  {
-    label: "Important & Non-Urgent",
-    value: "important_non_urgent",
-  },
-  {
-    label: "Unimportant & Urgent",
-    value: "unimportant_urgent",
-  },
-  {
-    label: "Unimportant & Non-Urgent",
-    value: "unimportant_non_urgent",
-  },
-];
 
 const validateTaskAddition = (
   taskName: string,
@@ -99,11 +80,13 @@ const NewTodoTaskForm: FC<Props> = ({ addTodoTask }) => {
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
-          {categories.map((category) => (
-            <SelectItem key={category.value} value={category.value}>
-              {category.label}
-            </SelectItem>
-          ))}
+          {
+            Object.keys(CategoryEnum).map((key) => (
+              <SelectItem key={key} value={key}>
+                {CategoryEnum[key as keyof typeof CategoryEnum]}
+              </SelectItem>
+            ))
+          }
         </SelectContent>
       </Select>
       <Button
