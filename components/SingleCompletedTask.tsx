@@ -1,9 +1,9 @@
 import { FC } from "react";
-import TaskType from "@/types/TaskType";
+import TodoTaskType from "@/types/TodoTaskType";
 import { FaCheck, FaTrashCan } from "react-icons/fa6";
 
 type Props = {
-  completedTask: TaskType;
+  completedTask: TodoTaskType;
 };
 
 const SingleCompletedTask: FC<Props> = ({ completedTask }) => {
@@ -16,7 +16,7 @@ const SingleCompletedTask: FC<Props> = ({ completedTask }) => {
       </button>
       <div className="w-[2px] rounded-full bg-neutral-500"></div>
       <p className="flex flex-grow items-center tracking-wide">
-        {completedTask.name}
+        {completedTask.title}
       </p>
       <button
         // onClick={() => deleteTodoTask(todoTask)}

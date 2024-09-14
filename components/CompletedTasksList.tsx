@@ -1,9 +1,9 @@
 import { FC } from "react";
-import TaskType from "@/types/TaskType";
+import TodoTaskType from "@/types/TodoTaskType";
 import SingleCompletedTask from "./SingleCompletedTask";
 
 type Props = {
-  completedTasks: TaskType[];
+  completedTasks: TodoTaskType[];
 };
 
 const CompletedTasksList: FC<Props> = ({ completedTasks }) => {

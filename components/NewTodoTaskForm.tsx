@@ -1,5 +1,6 @@
 "use client";
 import { FC, useState } from "react";
+import CategoryEnum from "@/types/CategoryEnum";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -11,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { FaPlus } from "react-icons/fa6";
-import CategoryEnum from "@/types/CategoryEnum";
 
 type Props = {
   addTodoTask: (taskName: string, category: string) => void;
@@ -80,13 +80,11 @@ const NewTodoTaskForm: FC<Props> = ({ addTodoTask }) => {
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
-          {
-            Object.keys(CategoryEnum).map((key) => (
-              <SelectItem key={key} value={key}>
-                {CategoryEnum[key as keyof typeof CategoryEnum]}
-              </SelectItem>
-            ))
-          }
+          {Object.keys(CategoryEnum).map((key) => (
+            <SelectItem key={key} value={key}>
+              {CategoryEnum[key as keyof typeof CategoryEnum]}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
       <Button

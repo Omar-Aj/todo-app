@@ -1,27 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
-import NewTodoTaskForm from "@/components/NewTodoTaskForm";
-import TodoTasksList from "@/components/TodoTasksList";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import TaskType from "@/types/TaskType";
+import TodoTasksList from "@/components/TodoTasksList";
+import NewTodoTaskForm from "@/components/NewTodoTaskForm";
 import CompletedTasksList from "@/components/CompletedTasksList";
+import TodoTaskType from "@/types/TodoTaskType";
 
 export default function Home() {
-  const [todoTasks, setTodoTasks] = useState<TaskType[]>([]);
-  const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
-  const [todoTasksTabSelected, setTodoTasksTabSelected] =
-    useState<boolean>(true);
+  const [todoTasks, setTodoTasks] = useState<TodoTaskType[]>([]);
+  const [completedTasks, setCompletedTasks] = useState<TodoTaskType[]>([]);
+  const [selectedTab, setSelectedTab] = useState<string>("todo");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const addTodoTask = (taskName: string, category: string) => {
-    const newTask: TaskType = {
+    const newTask: TodoTaskType = {
       id: todoTasks.length > 0 ? todoTasks[todoTasks.length - 1].id + 1 : 1,
-      name: taskName,
+      title: taskName,
       category: category,
-      createdAt: Date.now(),
-      isDone: false,
-      isDeleted: false,
-      deletedAt: null,
+      createdAt: new Date().toISOString(),
+      isCompleted: false,
+      completedAt: null,
     };
 
     setTodoTasks((prevState) => {
@@ -34,7 +32,7 @@ export default function Home() {
     });
   };
 
-  const deleteTodoTask = (taskToDelete: TaskType) => {
+  const deleteTodoTask = (taskToDelete: TodoTaskType) => {
     const taskToDeleteIndex = todoTasks.indexOf(taskToDelete);
 
     setTodoTasks((prevState) => {
@@ -45,26 +43,23 @@ export default function Home() {
     });
   };
 
-  const markTodoTaskCompleted = (completedTask: TaskType) => {};
+  const markTodoTaskCompleted = (completedTask: TodoTaskType) => {};
 
   const handleTabChange = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const buttonType = event.currentTarget.innerText.toLowerCase();
-    setTodoTasksTabSelected((prevState) => {
-      if (buttonType === "todo") return true;
-      return false;
-    });
+    const buttonText = event.currentTarget.innerText.toLowerCase();
+    setSelectedTab(buttonText);
   };
 
   useEffect(() => {
     const allTodoTasksJson = localStorage.getItem("todoAppTasks");
-    const allTodoTasks: TaskType[] = allTodoTasksJson
+    const allTodoTasks: TodoTaskType[] = allTodoTasksJson
       ? JSON.parse(allTodoTasksJson)
       : [];
     const allTodoTasksSorted = allTodoTasks.toSorted((a, b) => a.id - b.id);
     const allCompletedTasks = allTodoTasksSorted.filter(
-      (task) => task.isDone === true,
+      (task) => task.isCompleted === true,
     );
 
     setTodoTasks(allTodoTasksSorted);
@@ -79,6 +74,7 @@ export default function Home() {
       </div>
     );
   }
+
   return (
     <div className="container flex h-full max-w-3xl flex-col">
       <div className="flex gap-4 py-2">
@@ -96,7 +92,7 @@ export default function Home() {
         </button>
       </div>
 
-      {todoTasksTabSelected ? (
+      {selectedTab == "todo" ? (
         <div className="flex flex-grow flex-col">
           <div className="flex-grow">
             <TodoTasksList
