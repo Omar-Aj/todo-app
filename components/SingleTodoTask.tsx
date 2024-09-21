@@ -23,26 +23,29 @@ const SingleTodoTask: FC<Props> = ({
 }) => {
   return (
     <div
-      className={`flex space-x-4 rounded-lg border-4 border-dashed p-4 text-neutral-600 shadow-lg ${categoryStyle[todoTask.category as keyof typeof categoryStyle]}`}
+      className={`flex space-x-2 rounded-lg border-4 border-dashed p-2 text-neutral-600 shadow-lg ${categoryStyle[todoTask.category as keyof typeof categoryStyle]}`}
     >
-      <button
-        onClick={() => markTodoTaskCompleted(todoTask)}
-        className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
-      >
-        <FaCheck title="Check" />
-      </button>
-      <div className="w-[2px] flex-shrink-0 bg-neutral-500"></div>
+      <div>
+        <button
+          onClick={() => markTodoTaskCompleted(todoTask)}
+          className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
+        >
+          <FaCheck title="Check" />
+        </button>
+      </div>
       <div className="flex flex-grow items-center overflow-hidden">
-        <p className="overflow-hidden break-words tracking-wide">
+        <p className="overflow-hidden break-words text-sm tracking-wide md:text-base">
           {todoTask.title}
         </p>
       </div>
-      <button
-        onClick={() => deleteTodoTask(todoTask)}
-        className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
-      >
-        <FaTrashCan title="Delete" />
-      </button>
+      <div>
+        <button
+          onClick={() => deleteTodoTask(todoTask)}
+          className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
+        >
+          <FaTrashCan title="Delete" />
+        </button>
+      </div>
     </div>
   );
 };
