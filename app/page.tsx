@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { db } from "@/db";
 import { useLiveQuery } from "dexie-react-hooks";
+import TodoTaskType from "@/types/TodoTaskType";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import TodoTasksList from "@/components/TodoTasksList";
 import NewTodoTaskForm from "@/components/NewTodoTaskForm";
 import CompletedTasksList from "@/components/CompletedTasksList";
-import TodoTaskType from "@/types/TodoTaskType";
 
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState<string>("todo");
@@ -39,31 +39,8 @@ export default function Home() {
     }
   };
 
-  // const addTodoTask = async (taskName: string, category: string) => {
-  //   const newTask: TodoTaskType = {
-  //     id: todoTasks.length > 0 ? todoTasks[todoTasks.length - 1].id + 1 : 1,
-  //     title: taskName,
-  //     category: category,
-  //     createdAt: new Date().toISOString(),
-  //     isCompleted: false,
-  //     completedAt: null,
-  //   };
-
-  //   setTodoTasks((prevState) => {
-  //     const newTodoTasks = [...prevState, newTask];
-  //     const sortedTasks = newTodoTasks.toSorted((a, b) => a.id - b.id);
-  //     localStorage.setItem("todoAppTasks", JSON.stringify(sortedTasks));
-  //     return sortedTasks;
-  //   });
-  // };
-
   const deleteTodoTask = (taskToDelete: TodoTaskType) => {
-    // const taskToDeleteIndex = todoTasks.indexOf(taskToDelete);
-    // setTodoTasks((prevState) => {
-    //   const newTodoTasks = prevState.toSpliced(taskToDeleteIndex, 1);
-    //   localStorage.setItem("todoAppTasks", JSON.stringify(newTodoTasks));
-    //   return newTodoTasks;
-    // });
+    db.todoTasks.delete(taskToDelete.id);
   };
 
   const markTodoTaskCompleted = (completedTask: TodoTaskType) => {};
@@ -74,21 +51,6 @@ export default function Home() {
     const buttonText = event.currentTarget.innerText.toLowerCase();
     setSelectedTab(buttonText);
   };
-
-  // useEffect(() => {
-  //   const allTodoTasksJson = localStorage.getItem("todoAppTasks");
-  //   const allTodoTasks: TodoTaskType[] = allTodoTasksJson
-  //     ? JSON.parse(allTodoTasksJson)
-  //     : [];
-  //   const allTodoTasksSorted = allTodoTasks.toSorted((a, b) => a.id - b.id);
-  //   const allCompletedTasks = allTodoTasksSorted.filter(
-  //     (task) => task.isCompleted === true,
-  //   );
-
-  //   setTodoTasks(allTodoTasksSorted);
-  //   setCompletedTasks(allCompletedTasks);
-  //   setIsLoading(false);
-  // }, []);
 
   if (todoTasks == "loading") {
     return (

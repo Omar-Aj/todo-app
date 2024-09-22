@@ -1,8 +1,8 @@
 import { FC } from "react";
+import TodoTaskType from "@/types/TodoTaskType";
 import Category from "./Category";
 import SingleTodoTask from "./SingleTodoTask";
 import EmptyTodoTasks from "./EmptyTodoTasks";
-import TodoTaskType from "@/types/TodoTaskType";
 
 type Props = {
   todoTasks: TodoTaskType[];

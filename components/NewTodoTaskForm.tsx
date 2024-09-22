@@ -25,7 +25,7 @@ const validateTaskAddition = (
     return [false, "The task name cannot be empty."];
   }
   if (currentCategory.length === 0) {
-    return [false, "A category is required for the task."];
+    return [false, "Please select a category for the task."];
   }
   return [true, ""];
 };
