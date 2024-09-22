@@ -11,7 +11,11 @@ import CompletedTasksList from "@/components/CompletedTasksList";
 export default function Home() {
   const [selectedTab, setSelectedTab] = useState<string>("todo");
   const todoTasks = useLiveQuery(
-    () => db.todoTasks.orderBy("id").toArray(),
+    () =>
+      db.todoTasks
+        .orderBy("id")
+        .filter((t) => !t.isCompleted)
+        .toArray(),
     [selectedTab],
     "loading",
   );
@@ -43,7 +47,12 @@ export default function Home() {
     await db.todoTasks.delete(taskToDelete.id);
   };
 
-  const markTodoTaskCompleted = (completedTask: TodoTaskType) => {};
+  const markTodoTaskCompleted = async (completedTask: TodoTaskType) => {
+    await db.todoTasks.update(completedTask.id, {
+      isCompleted: true,
+      completedAt: new Date().toISOString(),
+    });
+  };
 
   const handleTabChange = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
