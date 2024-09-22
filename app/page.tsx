@@ -1,5 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { db } from "@/db";
+import { useLiveQuery } from "dexie-react-hooks";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import TodoTasksList from "@/components/TodoTasksList";
 import NewTodoTaskForm from "@/components/NewTodoTaskForm";
@@ -7,40 +9,61 @@ import CompletedTasksList from "@/components/CompletedTasksList";
 import TodoTaskType from "@/types/TodoTaskType";
 
 export default function Home() {
-  const [todoTasks, setTodoTasks] = useState<TodoTaskType[]>([]);
-  const [completedTasks, setCompletedTasks] = useState<TodoTaskType[]>([]);
   const [selectedTab, setSelectedTab] = useState<string>("todo");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const todoTasks = useLiveQuery(
+    () => db.todoTasks.orderBy("id").toArray(),
+    [selectedTab],
+    "loading",
+  );
+  const completedTasks = useLiveQuery(
+    () =>
+      db.todoTasks
+        .orderBy("id")
+        .filter((t) => t.isCompleted)
+        .toArray(),
+    [selectedTab],
+    [],
+  );
 
-  const addTodoTask = (taskName: string, category: string) => {
-    const newTask: TodoTaskType = {
-      id: todoTasks.length > 0 ? todoTasks[todoTasks.length - 1].id + 1 : 1,
-      title: taskName,
-      category: category,
-      createdAt: new Date().toISOString(),
-      isCompleted: false,
-      completedAt: null,
-    };
-
-    setTodoTasks((prevState) => {
-      const newTodoTasks = [...prevState, newTask];
-      const sortedTasks = newTodoTasks.toSorted((a, b) => a.id - b.id);
-
-      localStorage.setItem("todoAppTasks", JSON.stringify(sortedTasks));
-
-      return sortedTasks;
-    });
+  const addTodoTask = async (taskName: string, category: string) => {
+    try {
+      const id = await db.todoTasks.add({
+        title: taskName,
+        category: category,
+        createdAt: new Date().toISOString(),
+        isCompleted: false,
+        completedAt: null,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
+  // const addTodoTask = async (taskName: string, category: string) => {
+  //   const newTask: TodoTaskType = {
+  //     id: todoTasks.length > 0 ? todoTasks[todoTasks.length - 1].id + 1 : 1,
+  //     title: taskName,
+  //     category: category,
+  //     createdAt: new Date().toISOString(),
+  //     isCompleted: false,
+  //     completedAt: null,
+  //   };
+
+  //   setTodoTasks((prevState) => {
+  //     const newTodoTasks = [...prevState, newTask];
+  //     const sortedTasks = newTodoTasks.toSorted((a, b) => a.id - b.id);
+  //     localStorage.setItem("todoAppTasks", JSON.stringify(sortedTasks));
+  //     return sortedTasks;
+  //   });
+  // };
+
   const deleteTodoTask = (taskToDelete: TodoTaskType) => {
-    const taskToDeleteIndex = todoTasks.indexOf(taskToDelete);
-
-    setTodoTasks((prevState) => {
-      const newTodoTasks = prevState.toSpliced(taskToDeleteIndex, 1);
-      localStorage.setItem("todoAppTasks", JSON.stringify(newTodoTasks));
-
-      return newTodoTasks;
-    });
+    // const taskToDeleteIndex = todoTasks.indexOf(taskToDelete);
+    // setTodoTasks((prevState) => {
+    //   const newTodoTasks = prevState.toSpliced(taskToDeleteIndex, 1);
+    //   localStorage.setItem("todoAppTasks", JSON.stringify(newTodoTasks));
+    //   return newTodoTasks;
+    // });
   };
 
   const markTodoTaskCompleted = (completedTask: TodoTaskType) => {};
@@ -52,22 +75,22 @@ export default function Home() {
     setSelectedTab(buttonText);
   };
 
-  useEffect(() => {
-    const allTodoTasksJson = localStorage.getItem("todoAppTasks");
-    const allTodoTasks: TodoTaskType[] = allTodoTasksJson
-      ? JSON.parse(allTodoTasksJson)
-      : [];
-    const allTodoTasksSorted = allTodoTasks.toSorted((a, b) => a.id - b.id);
-    const allCompletedTasks = allTodoTasksSorted.filter(
-      (task) => task.isCompleted === true,
-    );
+  // useEffect(() => {
+  //   const allTodoTasksJson = localStorage.getItem("todoAppTasks");
+  //   const allTodoTasks: TodoTaskType[] = allTodoTasksJson
+  //     ? JSON.parse(allTodoTasksJson)
+  //     : [];
+  //   const allTodoTasksSorted = allTodoTasks.toSorted((a, b) => a.id - b.id);
+  //   const allCompletedTasks = allTodoTasksSorted.filter(
+  //     (task) => task.isCompleted === true,
+  //   );
 
-    setTodoTasks(allTodoTasksSorted);
-    setCompletedTasks(allCompletedTasks);
-    setIsLoading(false);
-  }, []);
+  //   setTodoTasks(allTodoTasksSorted);
+  //   setCompletedTasks(allCompletedTasks);
+  //   setIsLoading(false);
+  // }, []);
 
-  if (isLoading) {
+  if (todoTasks == "loading") {
     return (
       <div className="flex h-full items-center justify-center">
         <LoadingSpinner />

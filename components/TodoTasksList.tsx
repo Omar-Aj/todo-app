@@ -45,7 +45,7 @@ const groupTodoTasksByCategory = (tasks: TodoTaskType[]) => {
     },
   ];
 
-  tasks.forEach((task) => {
+  tasks?.forEach((task) => {
     const taskCategory = task.category;
     if (taskCategory == "ImportantUrgent") {
       categoryGroups[0].tasks.push(task);
@@ -68,7 +68,7 @@ const TodoTasksList: FC<Props> = ({
 }) => {
   const groupedTodoTasks = groupTodoTasksByCategory(todoTasks);
 
-  if (todoTasks.length == 0)
+  if (todoTasks?.length == 0)
     return (
       <div className="flex h-full items-center justify-center">
         <EmptyTodoTasks />
