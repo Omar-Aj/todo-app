@@ -67,16 +67,11 @@ const NewTodoTaskForm: FC<Props> = ({ addTodoTask }) => {
 
   return (
     <div className="flex flex-wrap gap-2 md:flex-nowrap">
-      <Input
-        placeholder="Task name..."
-        value={taskName}
-        onChange={(e) => setTaskName(e.target.value)}
-      />
       <Select
         value={currentCategory}
         onValueChange={(value) => setCurrentCategory(value)}
       >
-        <SelectTrigger className="w-32 shrink-0 flex-grow cursor-default md:w-48">
+        <SelectTrigger className="cursor-default md:w-48">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
@@ -87,6 +82,12 @@ const NewTodoTaskForm: FC<Props> = ({ addTodoTask }) => {
           ))}
         </SelectContent>
       </Select>
+      <Input
+        placeholder="Task name..."
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+        className="w-32 shrink-0 flex-grow md:order-first md:w-auto"
+      />
       <Button
         onClick={addTaskHandler}
         className="shrink-0 bg-neutral-600"
