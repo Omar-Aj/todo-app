@@ -39,8 +39,8 @@ export default function Home() {
     }
   };
 
-  const deleteTodoTask = (taskToDelete: TodoTaskType) => {
-    db.todoTasks.delete(taskToDelete.id);
+  const deleteTodoTask = async (taskToDelete: TodoTaskType) => {
+    await db.todoTasks.delete(taskToDelete.id);
   };
 
   const markTodoTaskCompleted = (completedTask: TodoTaskType) => {};
