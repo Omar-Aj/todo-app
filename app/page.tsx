@@ -20,11 +20,7 @@ export default function Home() {
     "loading",
   );
   const completedTasks = useLiveQuery(
-    () =>
-      db.todoTasks
-        .orderBy("id")
-        .filter((t) => t.isCompleted)
-        .toArray(),
+    () => db.todoTasks.filter((t) => t.isCompleted).sortBy("completedAt"),
     [selectedTab],
     [],
   );
