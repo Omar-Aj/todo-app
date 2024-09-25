@@ -97,7 +97,10 @@ export default function Home() {
         </div>
       ) : (
         <div className="flex-grow">
-          <CompletedTasksList completedTasks={completedTasks} />
+          <CompletedTasksList
+            completedTasks={completedTasks}
+            deleteTodoTask={deleteTodoTask}
+          />
         </div>
       )}
     </div>

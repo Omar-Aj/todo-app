@@ -4,9 +4,9 @@ import { FaCheck } from "react-icons/fa6";
 import { FaTrashCan } from "react-icons/fa6";
 
 type Props = {
-  todoTask: TodoTaskType;
+  task: TodoTaskType;
   deleteTodoTask: (taskToDelete: TodoTaskType) => void;
-  markTodoTaskCompleted: (taskToDelete: TodoTaskType) => void;
+  markTodoTaskCompleted?: (taskToDelete: TodoTaskType) => void;
 };
 
 const categoryStyle = {
@@ -17,17 +17,38 @@ const categoryStyle = {
 };
 
 const SingleTodoTask: FC<Props> = ({
-  todoTask,
+  task,
   deleteTodoTask,
   markTodoTaskCompleted,
 }) => {
+  if (task.isCompleted)
+    return (
+      <div
+        className={`flex space-x-2 rounded-lg border-4 border-dashed bg-opacity-80 p-2 text-neutral-600 shadow-lg ${categoryStyle[task.category as keyof typeof categoryStyle]}`}
+      >
+        <div className="flex flex-grow items-center overflow-hidden">
+          <p className="overflow-hidden break-words text-sm tracking-wide line-through md:text-base">
+            {task.title}
+          </p>
+        </div>
+        <div>
+          <button
+            onClick={() => deleteTodoTask(task)}
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
+          >
+            <FaTrashCan title="Delete" />
+          </button>
+        </div>
+      </div>
+    );
+
   return (
     <div
-      className={`flex space-x-2 rounded-lg border-4 border-dashed p-2 text-neutral-600 shadow-lg ${categoryStyle[todoTask.category as keyof typeof categoryStyle]}`}
+      className={`flex space-x-2 rounded-lg border-4 border-dashed p-2 text-neutral-600 shadow-lg ${categoryStyle[task.category as keyof typeof categoryStyle]}`}
     >
       <div>
         <button
-          onClick={() => markTodoTaskCompleted(todoTask)}
+          onClick={() => markTodoTaskCompleted!(task)}
           className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
         >
           <FaCheck title="Check" />
@@ -35,12 +56,12 @@ const SingleTodoTask: FC<Props> = ({
       </div>
       <div className="flex flex-grow items-center overflow-hidden">
         <p className="overflow-hidden break-words text-sm tracking-wide md:text-base">
-          {todoTask.title}
+          {task.title}
         </p>
       </div>
       <div>
         <button
-          onClick={() => deleteTodoTask(todoTask)}
+          onClick={() => deleteTodoTask(task)}
           className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
         >
           <FaTrashCan title="Delete" />

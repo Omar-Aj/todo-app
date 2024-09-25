@@ -1,7 +1,7 @@
 import { FC } from "react";
 import TodoTaskType from "@/types/TodoTaskType";
 import Category from "./Category";
-import SingleTodoTask from "./SingleTodoTask";
+import SingleTask from "./SingleTask";
 import EmptyTodoTasks from "./EmptyTodoTasks";
 
 type Props = {
@@ -85,9 +85,9 @@ const TodoTasksList: FC<Props> = ({
             >
               <Category name={name} tip={tip} />
               {tasks.map((task) => (
-                <SingleTodoTask
+                <SingleTask
                   key={task.id}
-                  todoTask={task}
+                  task={task}
                   deleteTodoTask={deleteTodoTask}
                   markTodoTaskCompleted={markTodoTaskCompleted}
                 />
