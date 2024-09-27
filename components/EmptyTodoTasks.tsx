@@ -1,5 +1,11 @@
 import Image from "next/image";
 import { all_done } from "@/assets/illustrations/Illustrations";
+import { Shadows_Into_Light_Two } from "next/font/google";
+
+const shadowsIntoLightTwo = Shadows_Into_Light_Two({
+  subsets: ["latin"],
+  weight: ["400"],
+});
 
 const CompleteTasksSentence = "You've done it!";
 
@@ -13,7 +19,9 @@ const EmptyTodoTasks = () => {
         priority={true}
         className="shrink-0"
       />
-      <h2 className="select-none text-center text-3xl font-bold text-neutral-600">
+      <h2
+        className={`${shadowsIntoLightTwo.className} select-none text-center text-3xl font-bold text-neutral-600`}
+      >
         {CompleteTasksSentence}
       </h2>
     </div>

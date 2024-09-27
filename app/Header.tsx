@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Shadows_Into_Light_Two } from "next/font/google";
 
 const shadowsIntoLightTwo = Shadows_Into_Light_Two({
@@ -8,22 +7,7 @@ const shadowsIntoLightTwo = Shadows_Into_Light_Two({
   weight: ["400"],
 });
 
-type navLinks = {
-  label: string;
-  href: string;
-}[];
-
-const websiteTitle = "To-Do App";
-const navLinks: navLinks = [
-  {
-    label: "To-dos",
-    href: "/",
-  },
-  {
-    label: "Pomodoro",
-    href: "/pomodoro",
-  },
-];
+const WEBSITE_TITLE = "To-Do App";
 
 const Header = () => {
   return (
@@ -33,7 +17,7 @@ const Header = () => {
           href={"/"}
           className={`${shadowsIntoLightTwo.className} select-none text-2xl font-semibold drop-shadow md:text-4xl`}
         >
-          {websiteTitle}
+          {WEBSITE_TITLE}
         </Link>
       </div>
     </header>

@@ -67,16 +67,16 @@ export default function Home() {
 
   return (
     <div className="container flex h-full max-w-3xl flex-col">
-      <div className="flex gap-4 py-2">
+      <div className="flex gap-4 py-2 font-semibold text-neutral-600">
         <button
           onClick={handleTabChange}
-          className={`flex-grow select-none rounded-lg border-2 bg-white py-1 font-semibold ${selectedTab === "Todo" ? "border-neutral-400" : ""}`}
+          className={`flex-1 select-none rounded-lg border-2 bg-white py-1 ${selectedTab === "Todo" && "border-neutral-400"}`}
         >
           Todo
         </button>
         <button
           onClick={handleTabChange}
-          className={`flex-grow select-none rounded-lg border-2 bg-white font-semibold ${selectedTab === "Completed" ? "border-neutral-400" : ""}`}
+          className={`flex-1 select-none rounded-lg border-2 bg-white py-1 ${selectedTab === "Completed" && "border-neutral-400"}`}
         >
           Completed
         </button>
