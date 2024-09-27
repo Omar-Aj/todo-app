@@ -9,7 +9,7 @@ import NewTodoTaskForm from "@/components/NewTodoTaskForm";
 import CompletedTasksList from "@/components/CompletedTasksList";
 
 export default function Home() {
-  const [selectedTab, setSelectedTab] = useState<string>("todo");
+  const [selectedTab, setSelectedTab] = useState<string>("Todo");
   const todoTasks = useLiveQuery(
     () =>
       db.todoTasks
@@ -53,7 +53,7 @@ export default function Home() {
   const handleTabChange = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const buttonText = event.currentTarget.innerText.toLowerCase();
+    const buttonText = event.currentTarget.innerText;
     setSelectedTab(buttonText);
   };
 
@@ -70,19 +70,19 @@ export default function Home() {
       <div className="flex gap-4 py-2">
         <button
           onClick={handleTabChange}
-          className="flex-grow rounded bg-blue-300 py-2"
+          className={`flex-grow select-none rounded-lg border-2 bg-white py-1 font-semibold ${selectedTab === "Todo" ? "border-neutral-400" : ""}`}
         >
           Todo
         </button>
         <button
           onClick={handleTabChange}
-          className="flex-grow rounded bg-blue-300 py-2"
+          className={`flex-grow select-none rounded-lg border-2 bg-white font-semibold ${selectedTab === "Completed" ? "border-neutral-400" : ""}`}
         >
           Completed
         </button>
       </div>
 
-      {selectedTab == "todo" ? (
+      {selectedTab == "Todo" ? (
         <div className="flex flex-grow flex-col">
           <div className="flex-grow">
             <TodoTasksList

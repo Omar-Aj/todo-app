@@ -34,7 +34,7 @@ const SingleTodoTask: FC<Props> = ({
         <div>
           <button
             onClick={() => deleteTodoTask(task)}
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
+            className="flex h-8 w-8 shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
           >
             <FaTrashCan title="Delete" />
           </button>
@@ -49,7 +49,7 @@ const SingleTodoTask: FC<Props> = ({
       <div>
         <button
           onClick={() => markTodoTaskCompleted!(task)}
-          className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
+          className="flex h-8 w-8 shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
         >
           <FaCheck title="Check" />
         </button>
@@ -62,7 +62,7 @@ const SingleTodoTask: FC<Props> = ({
       <div>
         <button
           onClick={() => deleteTodoTask(task)}
-          className="flex h-8 w-8 flex-shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
+          className="flex h-8 w-8 shrink-0 items-center justify-center self-center rounded-full bg-white shadow-md transition-shadow active:shadow-none"
         >
           <FaTrashCan title="Delete" />
         </button>
