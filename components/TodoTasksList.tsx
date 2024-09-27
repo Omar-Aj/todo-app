@@ -1,57 +1,57 @@
 import { FC } from "react";
+import TodoTaskType from "@/types/TodoTaskType";
 import Category from "./Category";
-import SingleTodoTask from "./SingleTodoTask";
+import SingleTask from "./SingleTask";
 import EmptyTodoTasks from "./EmptyTodoTasks";
-import TaskType from "@/types/TaskType";
 
 type Props = {
-  todoTasks: TaskType[];
-  deleteTodoTask: (taskToDelete: TaskType) => void;
-  markTodoTaskCompleted: (taskToDelete: TaskType) => void;
+  todoTasks: TodoTaskType[];
+  deleteTodoTask: (taskToDelete: TodoTaskType) => void;
+  markTodoTaskCompleted: (taskToDelete: TodoTaskType) => void;
 };
 
 type CategoryGroup = {
   value: string;
   name: string;
   tip: string;
-  tasks: TaskType[];
+  tasks: TodoTaskType[];
 };
 
-const groupTodoTasksByCategory = (tasks: TaskType[]) => {
+const groupTodoTasksByCategory = (tasks: TodoTaskType[]) => {
   const categoryGroups: CategoryGroup[] = [
     {
-      value: "important_urgent",
-      name: "Important & Urgent",
+      value: "ImportantUrgent",
+      name: "Important | Urgent",
       tip: "Do First",
       tasks: [],
     },
     {
-      value: "important_non_urgent",
-      name: "Important & Non-Urgent",
+      value: "ImportantNonUrgent",
+      name: "Important | Non-Urgent",
       tip: "Do Later",
       tasks: [],
     },
     {
-      value: "unimportant_urgent",
-      name: "Unimportant & Urgent",
+      value: "UnimportantUrgent",
+      name: "Unimportant | Urgent",
       tip: "Try to Delegate It",
       tasks: [],
     },
     {
-      value: "unimportant_non_urgent",
-      name: "Unimportant & Non-Urgent",
+      value: "UnimportantNonUrgent",
+      name: "Unimportant | Non-Urgent",
       tip: "Don't Do or Do when You're Free",
       tasks: [],
     },
   ];
 
-  tasks.forEach((task) => {
+  tasks?.forEach((task) => {
     const taskCategory = task.category;
-    if (taskCategory == "important_urgent") {
+    if (taskCategory == "ImportantUrgent") {
       categoryGroups[0].tasks.push(task);
-    } else if (taskCategory == "important_non_urgent") {
+    } else if (taskCategory == "ImportantNonUrgent") {
       categoryGroups[1].tasks.push(task);
-    } else if (taskCategory == "unimportant_urgent") {
+    } else if (taskCategory == "UnimportantUrgent") {
       categoryGroups[2].tasks.push(task);
     } else {
       categoryGroups[3].tasks.push(task);
@@ -68,7 +68,7 @@ const TodoTasksList: FC<Props> = ({
 }) => {
   const groupedTodoTasks = groupTodoTasksByCategory(todoTasks);
 
-  if (todoTasks.length == 0)
+  if (todoTasks?.length == 0)
     return (
       <div className="flex h-full items-center justify-center">
         <EmptyTodoTasks />
@@ -85,9 +85,9 @@ const TodoTasksList: FC<Props> = ({
             >
               <Category name={name} tip={tip} />
               {tasks.map((task) => (
-                <SingleTodoTask
+                <SingleTask
                   key={task.id}
-                  todoTask={task}
+                  task={task}
                   deleteTodoTask={deleteTodoTask}
                   markTodoTaskCompleted={markTodoTaskCompleted}
                 />

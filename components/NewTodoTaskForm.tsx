@@ -1,5 +1,6 @@
 "use client";
 import { FC, useState } from "react";
+import CategoryEnum from "@/types/CategoryEnum";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -11,30 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { FaPlus } from "react-icons/fa6";
-import TaskType from "@/types/TaskType";
 
 type Props = {
   addTodoTask: (taskName: string, category: string) => void;
 };
-
-const categories = [
-  {
-    label: "Important & Urgent",
-    value: "important_urgent",
-  },
-  {
-    label: "Important & Non-Urgent",
-    value: "important_non_urgent",
-  },
-  {
-    label: "Unimportant & Urgent",
-    value: "unimportant_urgent",
-  },
-  {
-    label: "Unimportant & Non-Urgent",
-    value: "unimportant_non_urgent",
-  },
-];
 
 const validateTaskAddition = (
   taskName: string,
@@ -44,7 +25,7 @@ const validateTaskAddition = (
     return [false, "The task name cannot be empty."];
   }
   if (currentCategory.length === 0) {
-    return [false, "A category is required for the task."];
+    return [false, "Please select a category for the task."];
   }
   return [true, ""];
 };
@@ -90,18 +71,19 @@ const NewTodoTaskForm: FC<Props> = ({ addTodoTask }) => {
         placeholder="Task name..."
         value={taskName}
         onChange={(e) => setTaskName(e.target.value)}
+        className="w-32 shrink-0 flex-grow"
       />
       <Select
         value={currentCategory}
         onValueChange={(value) => setCurrentCategory(value)}
       >
-        <SelectTrigger className="w-32 shrink-0 flex-grow cursor-default md:w-48">
+        <SelectTrigger className="order-first cursor-default md:order-none md:w-48">
           <SelectValue placeholder="Category" />
         </SelectTrigger>
         <SelectContent>
-          {categories.map((category) => (
-            <SelectItem key={category.value} value={category.value}>
-              {category.label}
+          {Object.keys(CategoryEnum).map((key) => (
+            <SelectItem key={key} value={key}>
+              {CategoryEnum[key as keyof typeof CategoryEnum]}
             </SelectItem>
           ))}
         </SelectContent>

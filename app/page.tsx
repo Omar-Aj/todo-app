@@ -1,102 +1,88 @@
 "use client";
-import { useState, useEffect } from "react";
-import NewTodoTaskForm from "@/components/NewTodoTaskForm";
-import TodoTasksList from "@/components/TodoTasksList";
+import { useState } from "react";
+import { db } from "@/db";
+import { useLiveQuery } from "dexie-react-hooks";
+import TodoTaskType from "@/types/TodoTaskType";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import TaskType from "@/types/TaskType";
+import TodoTasksList from "@/components/TodoTasksList";
+import NewTodoTaskForm from "@/components/NewTodoTaskForm";
 import CompletedTasksList from "@/components/CompletedTasksList";
 
 export default function Home() {
-  const [todoTasks, setTodoTasks] = useState<TaskType[]>([]);
-  const [completedTasks, setCompletedTasks] = useState<TaskType[]>([]);
-  const [todoTasksTabSelected, setTodoTasksTabSelected] =
-    useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [selectedTab, setSelectedTab] = useState<string>("Todo");
+  const todoTasks = useLiveQuery(
+    () =>
+      db.todoTasks
+        .orderBy("id")
+        .filter((t) => !t.isCompleted)
+        .toArray(),
+    [selectedTab],
+    "loading",
+  );
+  const completedTasks = useLiveQuery(
+    () => db.todoTasks.filter((t) => t.isCompleted).sortBy("completedAt"),
+    [selectedTab],
+    [],
+  );
 
-  const addTodoTask = (taskName: string, category: string) => {
-    const newTask: TaskType = {
-      id: todoTasks.length > 0 ? todoTasks[todoTasks.length - 1].id + 1 : 1,
-      name: taskName,
-      category: category,
-      createdAt: Date.now(),
-      isDone: false,
-      isDeleted: false,
-      deletedAt: null,
-    };
-
-    setTodoTasks((prevState) => {
-      const newTodoTasks = [...prevState, newTask];
-      const sortedTasks = newTodoTasks.toSorted((a, b) => a.id - b.id);
-
-      localStorage.setItem("todoAppTasks", JSON.stringify(sortedTasks));
-
-      return sortedTasks;
-    });
+  const addTodoTask = async (taskName: string, category: string) => {
+    try {
+      const id = await db.todoTasks.add({
+        title: taskName,
+        category: category,
+        createdAt: new Date().toISOString(),
+        isCompleted: false,
+        completedAt: null,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const deleteTodoTask = (taskToDelete: TaskType) => {
-    const taskToDeleteIndex = todoTasks.indexOf(taskToDelete);
-
-    setTodoTasks((prevState) => {
-      const newTodoTasks = prevState.toSpliced(taskToDeleteIndex, 1);
-      localStorage.setItem("todoAppTasks", JSON.stringify(newTodoTasks));
-
-      return newTodoTasks;
-    });
+  const deleteTodoTask = async (taskToDelete: TodoTaskType) => {
+    await db.todoTasks.delete(taskToDelete.id);
   };
 
-  const markTodoTaskCompleted = (completedTask: TaskType) => {};
+  const markTodoTaskCompleted = async (completedTask: TodoTaskType) => {
+    await db.todoTasks.update(completedTask.id, {
+      isCompleted: true,
+      completedAt: new Date().toISOString(),
+    });
+  };
 
   const handleTabChange = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const buttonType = event.currentTarget.innerText.toLowerCase();
-    setTodoTasksTabSelected((prevState) => {
-      if (buttonType === "todo") return true;
-      return false;
-    });
+    const buttonText = event.currentTarget.innerText;
+    setSelectedTab(buttonText);
   };
 
-  useEffect(() => {
-    const allTodoTasksJson = localStorage.getItem("todoAppTasks");
-    const allTodoTasks: TaskType[] = allTodoTasksJson
-      ? JSON.parse(allTodoTasksJson)
-      : [];
-    const allTodoTasksSorted = allTodoTasks.toSorted((a, b) => a.id - b.id);
-    const allCompletedTasks = allTodoTasksSorted.filter(
-      (task) => task.isDone === true,
-    );
-
-    setTodoTasks(allTodoTasksSorted);
-    setCompletedTasks(allCompletedTasks);
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) {
+  if (todoTasks == "loading") {
     return (
       <div className="flex h-full items-center justify-center">
         <LoadingSpinner />
       </div>
     );
   }
+
   return (
     <div className="container flex h-full max-w-3xl flex-col">
-      <div className="flex gap-4 py-2">
+      <div className="flex gap-4 py-2 font-semibold text-neutral-600">
         <button
           onClick={handleTabChange}
-          className="flex-grow rounded bg-blue-300 py-2"
+          className={`flex-1 select-none rounded-lg border-2 bg-white py-1 ${selectedTab === "Todo" && "border-neutral-400"}`}
         >
           Todo
         </button>
         <button
           onClick={handleTabChange}
-          className="flex-grow rounded bg-blue-300 py-2"
+          className={`flex-1 select-none rounded-lg border-2 bg-white py-1 ${selectedTab === "Completed" && "border-neutral-400"}`}
         >
           Completed
         </button>
       </div>
 
-      {todoTasksTabSelected ? (
+      {selectedTab == "Todo" ? (
         <div className="flex flex-grow flex-col">
           <div className="flex-grow">
             <TodoTasksList
@@ -111,7 +97,10 @@ export default function Home() {
         </div>
       ) : (
         <div className="flex-grow">
-          <CompletedTasksList completedTasks={completedTasks} />
+          <CompletedTasksList
+            completedTasks={completedTasks}
+            deleteTodoTask={deleteTodoTask}
+          />
         </div>
       )}
     </div>
