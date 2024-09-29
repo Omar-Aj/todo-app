@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { all_done } from "@/assets/illustrations/Illustrations";
+import { all_done } from "@/public/assets/illustrations/Illustrations";
 import { Shadows_Into_Light_Two } from "next/font/google";
 
 const shadowsIntoLightTwo = Shadows_Into_Light_Two({

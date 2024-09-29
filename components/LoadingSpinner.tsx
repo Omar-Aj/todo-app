@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { loading } from "@/assets/svg/SVGs";
+import { loading } from "@/public/assets/svg/SVGs";
 
 const LOADING_TEXT = "Loading";
 
