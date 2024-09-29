@@ -1,10 +1,6 @@
-import withPWA from 'next-pwa';
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: "export",  // <=== enables static exports
 };
 
-export default withPWA({
-    dest: "public",         // destination directory for the PWA files
-})(nextConfig);
+export default nextConfig;
