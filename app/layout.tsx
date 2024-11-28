@@ -12,6 +12,7 @@ const WEBSITE_DESCRIPTION = "Keep track of your daily tasks with ease!";
 export const metadata: Metadata = {
   title: WEBSITE_TITLE,
   description: WEBSITE_DESCRIPTION,
+  manifest: "manifest.json",
 };
 
 export default function RootLayout({
