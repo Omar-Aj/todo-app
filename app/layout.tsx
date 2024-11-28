@@ -12,11 +12,6 @@ const WEBSITE_DESCRIPTION = "Keep track of your daily tasks with ease!";
 export const metadata: Metadata = {
   title: WEBSITE_TITLE,
   description: WEBSITE_DESCRIPTION,
-  manifest: "/manifest.json",
-  icons: [
-    { rel: "apple-touch-icon", url: "/favicon-192x192.png" },
-    { rel: "icon", url: "/favicon-192x192.png" },
-  ],
 };
 
 export default function RootLayout({
